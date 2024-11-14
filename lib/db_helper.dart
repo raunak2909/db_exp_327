@@ -43,17 +43,34 @@ class DbHelper{
 
     });
 
-
   }
 
-  void addNote({required String title, required String desc}) async{
+  ///insert
+  Future<bool> addNote({required String title, required String desc}) async{
 
     Database db = await initDB();
 
-    db.insert("note", {
+    int rowsEffected = await db.insert("note", {
+      "n_title" : title,
+      "n_desc" : desc,
+     });
 
-    });
+    return rowsEffected>0;
 
   }
+
+  ///select
+  Future<List<Map<String, dynamic>>> fetchAllNote() async{
+
+    Database db = await initDB();
+
+    List<Map<String, dynamic>> allNotes = await db.query("note"); /// select * from note
+
+    return allNotes;
+  }
+
+
+  ///update
+  ///delete
 
 }

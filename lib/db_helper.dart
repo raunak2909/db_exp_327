@@ -71,6 +71,18 @@ class DbHelper{
 
 
   ///update
+  Future<bool> updateNote({required String title, required String desc, required int id}) async{
+
+    Database db = await initDB();
+
+    int rowsEffected = await db.update("note", {
+      "n_title" : title,
+      "n_desc" : desc,
+    }, where: "n_id = $id");
+
+    return rowsEffected>0;
+
+  }
   ///delete
 
 }

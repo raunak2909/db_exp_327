@@ -1,6 +1,9 @@
+import 'package:db_exp_327/add_note_page.dart';
 import 'package:db_exp_327/db_helper.dart';
+import 'package:db_exp_327/db_provider.dart';
 import 'package:db_exp_327/note_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -8,8 +11,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController titleController = TextEditingController();
-  TextEditingController descController = TextEditingController();
+
 
   DbHelper dbHelper = DbHelper.getInstance();
   List<NoteModel> mData = [];
@@ -19,16 +21,15 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    getNotes();
+    context.read<DBProvider>().getInitialNotes();
   }
 
-  void getNotes() async {
-    mData = await dbHelper.fetchAllNote();
-    setState(() {});
-  }
 
   @override
   Widget build(BuildContext context) {
+
+    mData = context.watch<DBProvider>().getAllNotes();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
@@ -53,7 +54,7 @@ class _HomePageState extends State<HomePage> {
                         IconButton(
                             onPressed: () async {
 
-                              titleController.text = mData[index].title;
+                              /*titleController.text = mData[index].title;
                               descController.text = mData[index].desc;
 
                               showModalBottomSheet(
@@ -61,31 +62,25 @@ class _HomePageState extends State<HomePage> {
                                       borderRadius: BorderRadius.vertical(
                                           top: Radius.circular(40))),
                                   backgroundColor: Colors.orange,
-                                  /*isDismissible: false,*/
+                                  *//*isDismissible: false,*//*
                                   enableDrag: false,
                                   context: context,
                                   builder: (_) {
                                     return getBottomSheetUI(isUpdate: true, nId: mData[index].id!);
-                                  });
+                                  });*/
                             },
                             icon: Icon(Icons.edit)),
                         IconButton(
                             onPressed: () async{
-                              bool check = await dbHelper.deleteNote(id: mData[index].id!);
+                              /*bool check = await dbHelper.deleteNote(id: mData[index].id!);
                               if(check){
                                 getNotes();
-                              }
+                              }*/
                             },
                             icon: Icon(
                               Icons.delete,
                               color: Colors.red,
                             )),
-                        Checkbox(value: isChecked, onChanged: (value){
-                          isChecked = value!;
-                          setState(() {
-
-                          });
-                        })
                       ],
                     ),
                   ),
@@ -96,26 +91,29 @@ class _HomePageState extends State<HomePage> {
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          titleController.clear();
+
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AddNotePage(),));
+
+          /*titleController.clear();
           descController.clear();
           showModalBottomSheet(
               shape: RoundedRectangleBorder(
                   borderRadius:
                       BorderRadius.vertical(top: Radius.circular(40))),
               backgroundColor: Colors.orange,
-              /*isDismissible: false,*/
+              *//*isDismissible: false,*//*
               enableDrag: false,
               context: context,
               builder: (_) {
                 return getBottomSheetUI();
-              });
+              });*/
         },
         child: Icon(Icons.add),
       ),
     );
   }
 
-  Widget getBottomSheetUI({bool isUpdate = false, int nId = 0}) {
+  /*Widget getBottomSheetUI({bool isUpdate = false, int nId = 0}) {
     return Container(
       padding: EdgeInsets.all(11),
       height: 500,
@@ -219,5 +217,5 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
     );
-  }
+  }*/
 }

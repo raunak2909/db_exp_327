@@ -1,3 +1,4 @@
+import 'package:db_exp_327/cubit/db_cubit.dart';
 import 'package:db_exp_327/db_helper.dart';
 import 'package:db_exp_327/db_provider.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,11 +7,12 @@ import 'package:provider/provider.dart';
 
 import 'note_model.dart';
 
-class AddNotePage extends StatelessWidget{
+class AddNotePage extends StatelessWidget {
   TextEditingController titleController = TextEditingController();
   TextEditingController descController = TextEditingController();
 
   DbHelper dbHelper = DbHelper.getInstance();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,9 +36,9 @@ class AddNotePage extends StatelessWidget{
                 label: Text('Title*'),
                 hintText: "Enter your title here..",
                 focusedBorder:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(11)),
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(11)),
                 enabledBorder:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(11)),
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(11)),
               ),
             ),
             SizedBox(
@@ -50,9 +52,9 @@ class AddNotePage extends StatelessWidget{
                 label: Text('Desc*'),
                 hintText: "Enter your description here..",
                 focusedBorder:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(11)),
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(11)),
                 enabledBorder:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(11)),
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(11)),
               ),
             ),
             SizedBox(
@@ -89,14 +91,24 @@ class AddNotePage extends StatelessWidget{
                               id: nId);
                         } else {*/
 
-                        context.read<DBProvider>().addNote(note: NoteModel(
+                        context.read<DBCubit>().addData(NoteModel(
                             title: titleController.text,
                             desc: descController.text,
-                            createdAt: DateTime.now().millisecondsSinceEpoch.toString()));
+                            createdAt: DateTime.now()
+                                .millisecondsSinceEpoch
+                                .toString()));
+
+                        /*context.read<DBProvider>().addNote(
+                            note: NoteModel(
+                                title: titleController.text,
+                                desc: descController.text,
+                                createdAt: DateTime.now()
+                                    .millisecondsSinceEpoch
+                                    .toString()));*/
 
                         Navigator.pop(context);
 
-                         /* check = await dbHelper.addNote();
+                        /* check = await dbHelper.addNote();
 
                         //}
 

@@ -1,13 +1,15 @@
+import 'package:db_exp_327/cubit/db_cubit.dart';
 import 'package:db_exp_327/db_helper.dart';
 import 'package:db_exp_327/db_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'home_page.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider(create: (context) => DBProvider(),
-  child: MyApp(),
+  runApp(BlocProvider(
+    create: (context) => DBCubit(dbHelper: DbHelper.getInstance()),
+    child: MyApp(),
   ),);
 }
 

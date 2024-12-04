@@ -1,9 +1,12 @@
 import 'package:db_exp_327/add_note_page.dart';
+import 'package:db_exp_327/cubit/db_cubit.dart';
 import 'package:db_exp_327/db_helper.dart';
 import 'package:db_exp_327/db_provider.dart';
 import 'package:db_exp_327/note_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import 'cubit/db_state.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -21,74 +24,23 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    context.read<DBProvider>().getInitialNotes();
+    //context.read<DBProvider>().getInitialNotes();
+    context.read<DBCubit>().getInitialNotes();
   }
 
 
   @override
   Widget build(BuildContext context) {
 
-    mData = context.watch<DBProvider>().getAllNotes();
+   // mData = context.watch<DBCubit>().state.mData;
+
+    //mData = context.watch<DBProvider>().getAllNotes();
 
     return Scaffold(
       appBar: AppBar(
         title: Text('Home'),
       ),
-      body: mData.isNotEmpty
-          ? ListView.builder(
-              itemCount: mData.length,
-              itemBuilder: (_, index) {
-                return ListTile(
-                  leading: Checkbox(value: isChecked, onChanged: (value){
-                    isChecked = value!;
-                    setState(() {
-
-                    });
-                  }),
-                  title: Text(mData[index].title),
-                  subtitle: Text(mData[index].desc),
-                  trailing: SizedBox(
-                    width: 150,
-                    child: Row(
-                      children: [
-                        IconButton(
-                            onPressed: () async {
-
-                              /*titleController.text = mData[index].title;
-                              descController.text = mData[index].desc;
-
-                              showModalBottomSheet(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(40))),
-                                  backgroundColor: Colors.orange,
-                                  *//*isDismissible: false,*//*
-                                  enableDrag: false,
-                                  context: context,
-                                  builder: (_) {
-                                    return getBottomSheetUI(isUpdate: true, nId: mData[index].id!);
-                                  });*/
-                            },
-                            icon: Icon(Icons.edit)),
-                        IconButton(
-                            onPressed: () async{
-                              /*bool check = await dbHelper.deleteNote(id: mData[index].id!);
-                              if(check){
-                                getNotes();
-                              }*/
-                            },
-                            icon: Icon(
-                              Icons.delete,
-                              color: Colors.red,
-                            )),
-                      ],
-                    ),
-                  ),
-                );
-              })
-          : Center(
-              child: Text('No notes yet!!'),
-            ),
+      body: updateDataAccToState(context.watch<DBCubit>().state),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
 
@@ -111,6 +63,73 @@ class _HomePageState extends State<HomePage> {
         child: Icon(Icons.add),
       ),
     );
+  }
+
+  Widget updateDataAccToState(DBState state) {
+    if(state is DbLoadingState){
+      return Center(child: CircularProgressIndicator(),);
+    } else if (state is DbErrorState){
+      return Center(child: Text("${state.errorMsg}"),);
+    } else if(state is DbLoadedState){
+      mData = state.notes;
+      return mData.isNotEmpty
+          ? ListView.builder(
+          itemCount: mData.length,
+          itemBuilder: (_, index) {
+            return ListTile(
+              leading: Checkbox(value: isChecked, onChanged: (value){
+                isChecked = value!;
+                setState(() {
+
+                });
+              }),
+              title: Text(mData[index].title),
+              subtitle: Text(mData[index].desc),
+              trailing: SizedBox(
+                width: 150,
+                child: Row(
+                  children: [
+                    IconButton(
+                        onPressed: () async {
+
+                          /*titleController.text = mData[index].title;
+                              descController.text = mData[index].desc;
+
+                              showModalBottomSheet(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(40))),
+                                  backgroundColor: Colors.orange,
+                                  *//*isDismissible: false,*//*
+                                  enableDrag: false,
+                                  context: context,
+                                  builder: (_) {
+                                    return getBottomSheetUI(isUpdate: true, nId: mData[index].id!);
+                                  });*/
+                        },
+                        icon: Icon(Icons.edit)),
+                    IconButton(
+                        onPressed: () async{
+                          /*bool check = await dbHelper.deleteNote(id: mData[index].id!);
+                              if(check){
+                                getNotes();
+                              }*/
+                        },
+                        icon: Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                        )),
+                  ],
+                ),
+              ),
+            );
+          })
+          : Center(
+        child: Text('No notes yet!!'),
+      );
+    } else {
+      return Container();
+    }
   }
 
   /*Widget getBottomSheetUI({bool isUpdate = false, int nId = 0}) {

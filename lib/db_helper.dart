@@ -54,7 +54,7 @@ class DbHelper{
   }
 
   ///insert
-  Future<bool> addNote(NoteModel newNote) async{
+  Future<bool> addNote({required NoteModel newNote}) async{
 
     Database db = await initDB();
 

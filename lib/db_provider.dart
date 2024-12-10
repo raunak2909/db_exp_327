@@ -9,7 +9,7 @@ class DBProvider extends ChangeNotifier{
   List<NoteModel> _mNotes = [];
 
   void addNote({required NoteModel note}) async{
-    bool check = await dbHelper.addNote(note);
+    bool check = await dbHelper.addNote(newNote: note);
 
     if(check){
       _mNotes = await dbHelper.fetchAllNote();

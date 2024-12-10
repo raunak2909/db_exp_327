@@ -1,3 +1,5 @@
+import 'package:db_exp_327/bloc/note_bloc.dart';
+import 'package:db_exp_327/bloc/note_event.dart';
 import 'package:db_exp_327/cubit/db_cubit.dart';
 import 'package:db_exp_327/db_helper.dart';
 import 'package:db_exp_327/db_provider.dart';
@@ -91,12 +93,20 @@ class AddNotePage extends StatelessWidget {
                               id: nId);
                         } else {*/
 
-                        context.read<DBCubit>().addData(NoteModel(
+                        context.read<NoteBloc>().add(AddNoteEvent(newNote: NoteModel(
                             title: titleController.text,
                             desc: descController.text,
                             createdAt: DateTime.now()
                                 .millisecondsSinceEpoch
-                                .toString()));
+                                .toString())));
+
+
+                       /* context.read<DBCubit>().addData(NoteModel(
+                            title: titleController.text,
+                            desc: descController.text,
+                            createdAt: DateTime.now()
+                                .millisecondsSinceEpoch
+                                .toString()));*/
 
                         /*context.read<DBProvider>().addNote(
                             note: NoteModel(

@@ -1,3 +1,4 @@
+import 'package:db_exp_327/bloc/note_bloc.dart';
 import 'package:db_exp_327/cubit/db_cubit.dart';
 import 'package:db_exp_327/db_helper.dart';
 import 'package:db_exp_327/db_provider.dart';
@@ -8,7 +9,7 @@ import 'home_page.dart';
 
 void main() {
   runApp(BlocProvider(
-    create: (context) => DBCubit(dbHelper: DbHelper.getInstance()),
+    create: (context) => NoteBloc(dbHelper: DbHelper.getInstance()),
     child: MyApp(),
   ),);
 }

@@ -12,7 +12,7 @@ class DBCubit extends Cubit<DBState>{
 
     emit(DbLoadingState());
 
-    bool check = await dbHelper.addNote(newNote);
+    bool check = await dbHelper.addNote(newNote: newNote);
     if(check){
       List<NoteModel> allNotes = await dbHelper.fetchAllNote();
       emit(DbLoadedState(notes: allNotes));

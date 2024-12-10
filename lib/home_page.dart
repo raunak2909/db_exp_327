@@ -1,4 +1,6 @@
 import 'package:db_exp_327/add_note_page.dart';
+import 'package:db_exp_327/bloc/note_bloc.dart';
+import 'package:db_exp_327/bloc/note_state.dart';
 import 'package:db_exp_327/cubit/db_cubit.dart';
 import 'package:db_exp_327/db_helper.dart';
 import 'package:db_exp_327/db_provider.dart';
@@ -25,7 +27,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     //context.read<DBProvider>().getInitialNotes();
-    context.read<DBCubit>().getInitialNotes();
+    //context.read<DBCubit>().getInitialNotes();
   }
 
 
@@ -40,7 +42,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text('Home'),
       ),
-      body: updateDataAccToState(context.watch<DBCubit>().state),
+      body: updateDataAccToState(context.watch<NoteBloc>().state),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
 
@@ -65,13 +67,18 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget updateDataAccToState(DBState state) {
-    if(state is DbLoadingState){
+  Widget updateDataAccToState(NoteState state) {
+    if(state is NoteLoadingState){
       return Center(child: CircularProgressIndicator(),);
-    } else if (state is DbErrorState){
-      return Center(child: Text("${state.errorMsg}"),);
-    } else if(state is DbLoadedState){
-      mData = state.notes;
+    } else if (state is NoteErrorState){
+      return Center(child: Row(
+        children: [
+          Icon(Icons.error, color:  Colors.red,),
+          Text("${state.errorMsg}"),
+        ],
+      ),);
+    } else if(state is NoteLoadedState){
+      mData = state.mNotes;
       return mData.isNotEmpty
           ? ListView.builder(
           itemCount: mData.length,
